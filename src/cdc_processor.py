@@ -5,10 +5,13 @@ from decimal import Decimal
 def normalize(data):
     if not data:
         return None
+
     clean = {}
     for k, v in data.items():
         if isinstance(v, Decimal):
             clean[k] = float(v)
+        elif isinstance(v, datetime):
+            clean[k] = v.isoformat()
         else:
             clean[k] = v
     return clean
