@@ -1,5 +1,17 @@
 import uuid
 from datetime import datetime
+from decimal import Decimal
+
+def normalize(data):
+    if not data:
+        return None
+    clean = {}
+    for k, v in data.items():
+        if isinstance(v, Decimal):
+            clean[k] = float(v)
+        else:
+            clean[k] = v
+    return clean
 
 def build_event(op, row_id, old, new):
     return {
@@ -9,7 +21,7 @@ def build_event(op, row_id, old, new):
         "operation_type": op,
         "primary_keys": {"id": row_id},
         "payload": {
-            "old_data": old,
-            "new_data": new
+            "old_data": normalize(old),
+            "new_data": normalize(new)
         }
     }
